@@ -29,6 +29,10 @@ Future<void> mergeL10N(Configuration configuration) async {
     switch (result) {
       case Right(:final value):
         final (:name, :content) = value;
+
+        final directory = Directory(configuration.targetDirectory);
+        if (!directory.existsSync()) directory.createSync();
+
         final file = File('${configuration.targetDirectory}/$name.arb');
         if (!file.existsSync()) file.createSync();
 
