@@ -26,7 +26,6 @@ Future<void> mergeL10N(Configuration configuration) async {
 
   int exitCode = 0;
   for (final result in mergeResults) {
-    print('');
     switch (result) {
       case Right(:final value):
         final (:name, :content) = value;
@@ -42,7 +41,9 @@ Future<void> mergeL10N(Configuration configuration) async {
 
         break;
       case Left(:final value):
+        print('');
         print(value);
+        print('');
         exitCode = 1;
     }
   }
