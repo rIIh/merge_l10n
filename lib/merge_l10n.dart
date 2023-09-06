@@ -24,7 +24,9 @@ Future<void> mergeL10N(Configuration configuration) async {
     ),
   );
 
+  int exitCode = 0;
   for (final result in mergeResults) {
+    print('');
     switch (result) {
       case Right(:final value):
         final (:name, :content) = value;
@@ -32,12 +34,20 @@ Future<void> mergeL10N(Configuration configuration) async {
         if (!file.existsSync()) file.createSync();
 
         file.writeAsStringSync(jsonEncode(content));
+
+        print(
+          '$name: Successfully merged ${content.length} keys '
+          'from ${languages[name]?.length ?? 0} files',
+        );
+
         break;
       case Left(:final value):
         print(value);
-        exit(1);
+        exitCode = 1;
     }
   }
+
+  exit(exitCode);
 }
 
 Future<Either<Error, ({String name, Map<String, dynamic> content})>> merge(
@@ -71,16 +81,24 @@ Future<Either<Error, ({String name, Map<String, dynamic> content})>> merge(
 
     if (collisions.isNotEmpty) {
       final messageBuilder = StringBuffer();
-      for (final MapEntry(:key, value: keys) in collisions.entries) {
-        messageBuilder.write("${key.key} was duplicated in:\n");
-        for (final LocaleKey(:metadata) in keys) {
-          messageBuilder.write("\t$metadata\n");
+      final iterator = collisions.entries.indexed;
+
+      for (final (index, MapEntry(:key, value: keys)) in iterator) {
+        messageBuilder.write("$name: `${key.key}` was duplicated in:\n");
+        for (final (keyIndex, LocaleKey(:metadata)) in keys.indexed) {
+          messageBuilder.write("\t$metadata");
+
+          if (keyIndex < keys.length - 1) {
+            messageBuilder.write('\n');
+          }
         }
 
-        messageBuilder.write('\n');
+        if (index < collisions.length - 1) {
+          messageBuilder.write('\n\n');
+        }
       }
 
-      return Left(ArgumentError('Keys collision occured:\n$messageBuilder'));
+      return Left(ArgumentError('Key collision occured\n$messageBuilder'));
     }
   }
 
