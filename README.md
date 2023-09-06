@@ -2,6 +2,8 @@
 
 Command line tool to merge .arb files into single one
 
+For now tool will search .arb files in `lib/` folder and place result in `l10n/` folder
+
 ```shell
 dart run merge_l10n
 ```
