@@ -1,0 +1,23 @@
+name: merge_l10n
+description: Merge arb files into one.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.1.0
+
+freezed_constraint: &freezed_constraint ^2.0.0
+
+dependencies:
+  freezed_annotation: *freezed_constraint
+  equatable: ^2.0.0
+  fpdart: ^1.0.0
+  args: ^2.0.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.0.0
+
+  build_runner: ^2.0.0
+  freezed: *freezed_constraint
+  json_serializable: ^6.0.0
